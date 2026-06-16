@@ -1,12 +1,16 @@
 package com.bytesMenu.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "pratos")
+@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +28,6 @@ public class Prato {
     @Column(nullable = false)
     private BigDecimal preco;
 
+    @Column(nullable = false)
     private Boolean disponivel = true;
 }
