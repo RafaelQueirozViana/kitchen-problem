@@ -17,41 +17,33 @@ public class PratoController {
 
     private final PratoService pratoService;
 
-    @PostMapping
-    public ResponseEntity<Prato> criar(@RequestBody PratoRequestDTO dto) {
-
-        Prato prato = pratoService.criar(dto);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(prato);
-    }
-
-    @GetMapping("/listar-todos")
+    // Endpoint que o frontend chama ao carregar a página
+    @GetMapping
     public ResponseEntity<List<Prato>> listarTodos() {
-
-        return ResponseEntity.ok(
-                pratoService.listarTodos()
-        );
+        return ResponseEntity.ok(pratoService.listarTodos());
     }
 
+    // Cardápio público
     @GetMapping("/disponiveis")
     public ResponseEntity<List<Prato>> listarDisponiveis() {
-
-        return ResponseEntity.ok(
-                pratoService.listarDisponiveis()
-        );
+        return ResponseEntity.ok(pratoService.listarDisponiveis());
     }
 
+    // Buscar por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Prato> buscarPorId(
-            @PathVariable Long id) {
-
-        return ResponseEntity.ok(
-                pratoService.buscarPorId(id)
-        );
+    public ResponseEntity<Prato> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(pratoService.buscarPorId(id));
     }
 
+    // Criar prato
+    @PostMapping
+    public ResponseEntity<Prato> criar(@RequestBody PratoRequestDTO dto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(pratoService.criar(dto));
+    }
+
+    // Atualizar prato
     @PutMapping("/{id}")
     public ResponseEntity<Prato> atualizar(
             @PathVariable Long id,
@@ -62,6 +54,7 @@ public class PratoController {
         );
     }
 
+    // Alternar disponível/indisponível
     @PatchMapping("/{id}/disponivel")
     public ResponseEntity<Prato> alterarDisponibilidade(
             @PathVariable Long id) {
@@ -71,9 +64,9 @@ public class PratoController {
         );
     }
 
+    // Deletar prato
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(
-            @PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
 
         pratoService.deletar(id);
 
