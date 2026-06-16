@@ -1,8 +1,8 @@
 package com.bytesMenu.service;
 
+import com.bytesMenu.dto.PratoRequestDTO;
 import com.bytesMenu.entity.Prato;
 import com.bytesMenu.repository.PratoRepository;
-import com.bytesMenu.dto.PratoRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,14 @@ public class PratoService {
 
     private final PratoRepository pratoRepository;
 
-    public Prato criar(Prato dto) {
+    public Prato criar(PratoRequestDTO dto) {
+
         Prato prato = new Prato();
-        prato.setNome(dto.getNome());
-        prato.setDescricao(dto.getDescricao());
-        prato.setPreco(dto.getPreco());
-        prato.setDisponivel(dto.getDisponivel() != null ? dto.getDisponivel() : true);
+
+        prato.setNome(dto.getName());
+        prato.setDescricao(dto.getDescription());
+        prato.setPreco(dto.getPrice());
+        prato.setDisponivel(dto.getAvailable());
 
         return pratoRepository.save(prato);
     }
@@ -28,26 +30,44 @@ public class PratoService {
         return pratoRepository.findAll();
     }
 
-    public Prato buscarPorId(Long id) {
-        return pratoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Prato não encontrado com id: " + id));
+    public List<Prato> listarDisponiveis() {
+        return pratoRepository.findByDisponivelTrue();
     }
 
-    public Prato atualizar(Long id, Prato dto) {
+    public Prato buscarPorId(Long id) {
+
+        return pratoRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Prato não encontrado com id: " + id));
+    }
+
+    public Prato atualizar(Long id, PratoRequestDTO dto) {
+
         Prato prato = buscarPorId(id);
 
-        prato.setNome(dto.getNome());
-        prato.setDescricao(dto.getDescricao());
-        prato.setPreco(dto.getPreco());
-        prato.setDisponivel(dto.getDisponivel() != null ? dto.getDisponivel() : prato.getDisponivel());
+        prato.setNome(dto.getName());
+        prato.setDescricao(dto.getDescription());
+        prato.setPreco(dto.getPrice());
+        prato.setDisponivel(dto.getAvailable());
+
+        return pratoRepository.save(prato);
+    }
+
+    public Prato alterarDisponibilidade(Long id) {
+
+        Prato prato = buscarPorId(id);
+
+        prato.setDisponivel(!prato.getDisponivel());
 
         return pratoRepository.save(prato);
     }
 
     public void deletar(Long id) {
+
         if (!pratoRepository.existsById(id)) {
             throw new RuntimeException("Prato não encontrado com id: " + id);
         }
+
         pratoRepository.deleteById(id);
     }
 }
